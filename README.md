@@ -1,38 +1,3 @@
-## Generic State Machine Manager
-
-### Design Features
-- Make state machines modular units that can be reused
-- State machines that use other state machines are aware of who they can use,
-  but state machines that are being used are not aware of state machines that use them
-- No tasking/threading
-- Handle multiple state machines concurrently
-- Trigger other state machines, and wait for their completion, then resume
-- Create/delete timers
-- Send notifications outside the state machine group
-- Send events to themselves
-- Accept events from outside the state machine group
-- Encourage state machine implementations to be represented in a `(<State>, <Event>)` format
-
-### Inspiration
-- [message-io](https://crates.io/crates/message-io)
-- [async-hsm](https://crates.io/crates/async-hsm)
-- [event-driven finate-state machine](https://en.wikipedia.org/wiki/Event-driven_finite-state_machine)
-
-### Overview
-`StateMachine`s are first registered with the `StateMachineManager`, which I will refer
-to as simply the `Manager`. Every call to `Manager::cycle()` processes a single event.
-A single event corresponds to running on a single state machine. The `Manager` accesses
-the contents of the `Controller` and manipulates it. A single `Controller` is shared
-amongst all state machines registered with the `Manager`.
-
-There are two types of events `UserEvent`s and `SystemEvent`s. `UserEvent`s are passed to
-`StateMachine::cycle()` while `SystemEvent`s are not. `StateMachine::cycle()` accepts a
-`&mut Controller` and a `UserEvent`. The `StateMachine` uses the functions in the `Controller`
-to add/remove events from the event queue; all functions do this except for timer related functions.
-`SystemEvent`s are consumed by the manager and used to modify the `Controller` internals or send
-data or notifications to outside the state machine group.
-
-
 ## Node based StateMachine Manager (in development)
 
 ## Goals
